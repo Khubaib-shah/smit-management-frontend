@@ -4,6 +4,7 @@ import Admin from "./pages/Admin";
 import Students from "./pages/Students";
 import Teachers from "./pages/Teachers";
 import Dashboard from "./pages/Dashboard";
+import "./App.css";
 
 function App() {
   return (
