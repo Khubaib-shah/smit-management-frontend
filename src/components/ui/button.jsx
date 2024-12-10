@@ -46,6 +46,6 @@ const Button = React.forwardRef(
     );
   }
 );
-Button.displayName = "Button";
+Button.displayName = "Khubaib";
 
 export { Button, buttonVariants };
