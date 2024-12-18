@@ -1,15 +1,19 @@
-
 import  {AuthContext} from "@/context/AuthContext";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Image } from "antd";
-
+import { signOut } from "firebase/auth";
+import { auth } from "@/utiltes/firbase";
+import { Link, useNavigate } from "react-router-dom"; 
 
 
 
 function Header() {
   const {user, setUser} = useContext(AuthContext);
-  console.log("user =>", user );
-  
+  const navigate = useNavigate()
+
+   const handleuser = async () => {    
+    await signOut(auth);
+   }
   return(
     <>
   <header className="text-gray-600 body-font">
@@ -38,25 +42,33 @@ function Header() {
       <div  className="flex gap-8" >
         {
           user?.isLogin ? (
-          <Image className="rounded-full"
-           src={user?.userInfo?.photoURl}
-          width={40} height={40} />
+           <Image className="rounded-full"  width={40} height={40} src={user?.userInfo?.photoURl} />
+            
+           
           ):(
-            <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+            <Link to={'/SignUp'} >
+            <button
+             className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+             navigate={'/Pages/Signup'}
+             >
             Sign Up
           </button>
+              </Link>
           ) 
         }
         {
           user?.isLogin ? (
-            <button className="inline-flex items-center  bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+            <button className="inline-flex items-center  bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+            onClick={handleuser}>
             Logout
            </button>
           ) 
           : (
+            <Link to={'/Login'} >
       <button className="inline-flex items-center  bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
        Login
       </button>
+            </Link>
           )
         }
           <div/>

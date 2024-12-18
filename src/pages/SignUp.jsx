@@ -1,15 +1,18 @@
-// import  { useState } from 'react';
+import  { useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup,createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from '@/utiltes/firbase';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
-// let [userName, setUserName] = useState("")
-// let [email, setEmail] = useState("")
-// let [password,setPassword] = useState("")
 
 
+const SignUpForm = () => {
+  let [userName, setUserName] = useState("")
+  let [email, setEmail] = useState("")
+  let [password,setPassword] = useState("")
+  const navigate = useNavigate()
 const handleWithGoogle = () => {
 const provider = new GoogleAuthProvider();
 provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
@@ -20,8 +23,7 @@ signInWithPopup(auth, provider)
     const token = credential.accessToken;
     // The signed-in user info.
     const user = result.user;
-    console.log("token", token);
-    console.log("user", user);
+    navigate('/')
     
     // IdP data available using getAdditionalUserInfo(result)
     // ...
@@ -32,18 +34,33 @@ signInWithPopup(auth, provider)
     // The email of the user's account used.
     const email = error.customData.email;
     // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    console.log("error=>",errorCode,errorMessage);
-    console.log("email", email);
-    console.log("credential",credential);
-    
-    
-    
-    // ...
-  });
+    const credential = GoogleAuthProvider.credentialFromError(error);  
+});
 }
+const handleSignup = async () => {
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    // ...
+    console.log("user in Signup=>", user);
+      console.log("email", email);
+      console.log("password", password);
+      navigate('/Login')
+      
+      
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("error=>",errorCode,errorMessage );
+    });
+    
+  }
+  const moveToLogin = () => {
+    navigate('/Login')
+  }
 
-const SignUpForm = () => {
   return (
     <div className="flex justify-center py-4 items-center h-min-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-3 md:p-10 w-full max-w-md">
@@ -72,8 +89,8 @@ const SignUpForm = () => {
             ]}
           >
             <Input placeholder="Enter your email"
-            // value={email}
-            // onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
              />
             
           </Form.Item>
@@ -90,8 +107,8 @@ const SignUpForm = () => {
             ]}
           >
             <Input placeholder="Enter your username"
-            // value={userName}
-            // onChange={(e) => setUserName(e.target.value)}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             />
             
           </Form.Item>
@@ -109,8 +126,8 @@ const SignUpForm = () => {
             ]}
           >
             <Input.Password placeholder="Enter your password" 
-            // value={password}
-            // onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             
             />
           </Form.Item>
@@ -121,6 +138,7 @@ const SignUpForm = () => {
               type="primary"
               htmlType="submit"
               className="w-full mb-1"
+              onClick={handleSignup}
             >
               Sign Up
             </Button>
@@ -137,6 +155,7 @@ const SignUpForm = () => {
               type="default"
               htmlType="button"
               className="w-full mb-1"
+              onClick={moveToLogin}
             >
               Login
             </Button>

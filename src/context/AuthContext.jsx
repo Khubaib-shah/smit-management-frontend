@@ -18,7 +18,7 @@ function AuthContextProvider({ children }){
 //  Handle user state changes/
  function onAuthChanged(user) {
     if(user){
-        console.log("user=>", user);
+        // console.log("user=>", user);
         
         setUser({isLogin : true , userInfo: {
             name : user?.displayName,

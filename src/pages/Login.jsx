@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/utiltes/firbase';
 
 
 const { Title, Text } = Typography
 
 const Login = () => {
+
+const navigate = useNavigate()
+const [email, setEmail] = useState("")
+const [password, setPassword] = useState("")
+ 
+const handleLogin = async () => {
+  try{
+    await signInWithEmailAndPassword(auth,email,password)
+    navigate('/')
+  }catch(error){
+    console.log(error);
+    
+  }
+}
+
+ const moveToSignUp = () => {
+  navigate('/SignUp')
+ }
   return (
     <div className="flex justify-center py-20 items-center h-min-screen bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg p-3 md:p-10 w-full max-w-md">
         {/* Title */}
         <Title level={3} className="text-center mb-4">
-          Sign In
+           LogIn
         </Title>
 
         <Form
@@ -32,7 +53,11 @@ const Login = () => {
               },
             ]}
           >
-            <Input placeholder="Enter your email" />
+            <Input
+             placeholder="Enter your email" 
+             value={email}
+            onChange={(e) => setEmail(e.target.value)}
+             />
           </Form.Item>
           {/* Password Input */}
           <Form.Item
@@ -45,7 +70,11 @@ const Login = () => {
               },
             ]}
           >
-            <Input.Password placeholder="Enter your password" />
+            <Input.Password
+            placeholder="Enter your password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            />
           </Form.Item>
 
           {/* Sign Up Button */}
@@ -54,6 +83,7 @@ const Login = () => {
               type="primary"
               htmlType="submit"
               className="w-full"
+             onClick={handleLogin}
             >
               Login
             </Button>
@@ -66,13 +96,16 @@ const Login = () => {
 
           {/* Login Button */}
           <Form.Item>
+           
             <Button
               type="default"
               htmlType="button"
               className="w-full mb-3"
-            >
+              onClick={moveToSignUp}
+              >
               Sign Up
             </Button>
+            
           </Form.Item>
         </Form>
       </div>
